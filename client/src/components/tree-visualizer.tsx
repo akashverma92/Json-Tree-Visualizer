@@ -6,8 +6,8 @@ import {
   MiniMap,
   useNodesState,
   useEdgesState,
-  Node,
-  Edge,
+  type Node,
+  type Edge,
   ReactFlowProvider,
   useReactFlow,
 } from "@xyflow/react";
@@ -32,8 +32,8 @@ interface TreeVisualizerContentProps {
 }
 
 function TreeVisualizerContent({ jsonData }: TreeVisualizerContentProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState<string | null>(null);
   const { fitView, getViewport, setCenter } = useReactFlow();
@@ -63,7 +63,7 @@ function TreeVisualizerContent({ jsonData }: TreeVisualizerContentProps) {
       return;
     }
 
-    const foundNode = findNodeByPath(nodes, searchQuery);
+    const foundNode = findNodeByPath(nodes as any[], searchQuery);
 
     setNodes((nds) =>
       nds.map((node) => ({

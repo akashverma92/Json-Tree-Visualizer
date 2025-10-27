@@ -18,12 +18,13 @@ const nodeIcons: Record<NodeType, any> = {
   primitive: Variable,
 };
 
-export const JsonNode = memo(({ data, type }: NodeProps<NodeData>) => {
+export const JsonNode = memo(({ data, type }: NodeProps) => {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
   const nodeType = type as NodeType;
   const Icon = nodeIcons[nodeType];
-  const isHighlighted = data.isHighlighted;
+  const nodeData = data as unknown as NodeData;
+  const isHighlighted = nodeData.isHighlighted;
 
   const getNodeClasses = () => {
     if (isHighlighted) {
@@ -45,11 +46,11 @@ export const JsonNode = memo(({ data, type }: NodeProps<NodeData>) => {
   const handleCopyPath = async (e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      await navigator.clipboard.writeText(data.path);
+      await navigator.clipboard.writeText(nodeData.path);
       setCopied(true);
       toast({
         title: "Path copied!",
-        description: `Copied: ${data.path}`,
+        description: `Copied: ${nodeData.path}`,
       });
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
@@ -70,7 +71,7 @@ export const JsonNode = memo(({ data, type }: NodeProps<NodeData>) => {
         ${getNodeClasses()}
         ${isHighlighted ? "shadow-lg scale-105" : "hover-elevate"}
       `}
-      data-testid={`node-${nodeType}-${data.path.replace(/[^a-zA-Z0-9]/g, "-")}`}
+      data-testid={`node-${nodeType}-${nodeData.path.replace(/[^a-zA-Z0-9]/g, "-")}`}
     >
       <Handle
         type="target"
@@ -82,16 +83,16 @@ export const JsonNode = memo(({ data, type }: NodeProps<NodeData>) => {
         <Icon className="w-4 h-4 mt-0.5 flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <div className="text-sm font-medium break-words leading-relaxed">
-            {data.label}
+            {nodeData.label}
           </div>
-          <div className="text-xs opacity-75 mt-1 font-mono truncate" title={data.path}>
-            {data.path}
+          <div className="text-xs opacity-75 mt-1 font-mono truncate" title={nodeData.path}>
+            {nodeData.path}
           </div>
         </div>
         <button
           onClick={handleCopyPath}
           className="flex-shrink-0 p-1 rounded hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-          data-testid={`button-copy-path-${data.path.replace(/[^a-zA-Z0-9]/g, "-")}`}
+          data-testid={`button-copy-path-${nodeData.path.replace(/[^a-zA-Z0-9]/g, "-")}`}
           title="Copy path"
         >
           {copied ? (
