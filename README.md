@@ -201,30 +201,7 @@ This project was built as part of the APIWIZ Frontend Assignment. It demonstrate
 
 MIT License - Feel free to use this project for learning and development.
 
-## Assignment Requirements
 
-All mandatory and optional features have been implemented:
-
-### Mandatory ✅
-- [x] JSON input with validation and error messages
-- [x] React Flow tree visualization
-- [x] Color-coded node types (objects, arrays, primitives)
-- [x] Search by JSON path with highlighting
-- [x] Auto-pan to matched nodes
-- [x] Match found/not found messages
-- [x] Zoom In/Out/Fit View controls
-- [x] Pan canvas navigation
-- [x] Node information on hover
-
-### Optional Bonuses ✅
-- [x] Dark/Light mode toggle
-- [x] Clear/Reset button
-- [x] Click node to copy JSON path
-- [x] Download tree as image
-- [x] Sample JSON loading
-- [x] Responsive design
-- [x] Beautiful empty states
-- [x] Comprehensive automated testing
 
 ## Acknowledgments
 
