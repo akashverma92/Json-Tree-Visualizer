@@ -58,6 +58,31 @@ npm run dev
 
 The application will be available at `http://localhost:5000`
 
+## Deployment
+
+### Deploy to Vercel
+
+1. **Push to GitHub**
+   ```bash
+   git add .
+   git commit -m "Prepare for Vercel deployment"
+   git push origin main
+   ```
+
+2. **Deploy on Vercel**
+   - Go to [vercel.com](https://vercel.com)
+   - Import your GitHub repository
+   - Vercel will automatically detect the configuration
+   - The app will be deployed and available at your Vercel URL
+
+3. **Build Configuration**
+   - Build Command: `npm run vercel-build`
+   - Output Directory: `dist`
+   - Install Command: `npm install`
+
+### Environment Variables
+No environment variables are required for basic functionality.
+
 ## Usage
 
 1. **Enter JSON Data**
