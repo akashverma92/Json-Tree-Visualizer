@@ -3,12 +3,8 @@ import { createServer, type Server } from "http";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { createServer as createViteServer, createLogger } from "vite";
-import { nanoid } from "nanoid";
-import viteConfig from "../vite.config";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const viteLogger = createLogger();
 
 // Inline the functions that were in separate files
 export function log(message: string, source = "express") {
@@ -25,54 +21,6 @@ export function log(message: string, source = "express") {
 export async function registerRoutes(app: express.Express): Promise<Server> {
   const httpServer = createServer(app);
   return httpServer;
-}
-
-export async function setupVite(app: express.Express, server: Server) {
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true as const,
-  };
-
-  const vite = await createViteServer({
-    ...viteConfig,
-    configFile: false,
-    customLogger: {
-      ...viteLogger,
-      error: (msg, options) => {
-        viteLogger.error(msg, options);
-        process.exit(1);
-      },
-    },
-    server: serverOptions,
-    appType: "custom",
-  });
-
-  app.use(vite.middlewares);
-  app.use("*", async (req, res, next) => {
-    const url = req.originalUrl;
-
-    try {
-      const clientTemplate = path.resolve(
-        __dirname,
-        "..",
-        "client",
-        "index.html",
-      );
-
-      // always reload the index.html file from disk incase it changes
-      let template = await fs.promises.readFile(clientTemplate, "utf-8");
-      template = template.replace(
-        `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`,
-      );
-      const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
-    } catch (e) {
-      vite.ssrFixStacktrace(e as Error);
-      next(e);
-    }
-  });
 }
 
 export function serveStatic(app: express.Express) {
@@ -153,13 +101,8 @@ async function initializeApp() {
     throw err;
   });
 
-  // In production, serve static files
-  if (process.env.NODE_ENV === "production") {
-    serveStatic(app);
-  } else {
-    // In development, setup Vite
-    await setupVite(app, server);
-  }
+  // Always serve static files in Vercel (production)
+  serveStatic(app);
 
   isInitialized = true;
 }
